@@ -6,7 +6,7 @@
 /*   By: aditsch <aditsch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/18 01:55:35 by aditsch           #+#    #+#             */
-/*   Updated: 2016/11/17 22:19:28 by aditsch          ###   ########.fr       */
+/*   Updated: 2016/11/18 23:55:19 by aditsch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct			s_fd
 }						t_fd;
 
 t_fd		*ft_list_new_fd(int fd);
-void		ft_list_push_back_fd(t_fd **list, t_fd *new);
+void		ft_list_push_back_fd(t_fd **list, int fd);
 void 		print_list_fd(t_fd **list);
 int			get_next_line(int const fd, char **line);
 #endif
