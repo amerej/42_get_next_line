@@ -6,7 +6,7 @@
 /*   By: aditsch <aditsch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/18 01:55:22 by aditsch           #+#    #+#             */
-/*   Updated: 2016/11/20 17:05:06 by aditsch          ###   ########.fr       */
+/*   Updated: 2016/11/20 19:23:50 by aditsch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ t_fd		*ft_manage_fd(t_fd **list, int fd)
 int			ft_read_tmp(char **line, t_fd *list)
 {
 	char	*tmp;
-
 	if (!list->tmp)
 		return (0);
 	if ((tmp = ft_strchr(list->tmp, '\n')))
@@ -39,14 +38,17 @@ int			ft_read_tmp(char **line, t_fd *list)
 		return (1);
 	}
 	else
+	{
 		*line = ft_strjoin(*line, list->tmp);
+		ft_strdel(&(list->tmp));
+	}
 	return (0);
 }
 
 int			ft_read_fd(char **line, t_fd *list)
 {
 	int		count;
-	char 	buffer[BUFF_SIZE + 1];
+	char	buffer[BUFF_SIZE + 1];
 	char	*tmp;
 
 	while ((count = read(list->fd, buffer, BUFF_SIZE)))
@@ -83,7 +85,7 @@ int			get_next_line(int const fd, char **line)
 		return (1);
 	return (ft_read_fd(line, current_fd));
 }
-
+/*
 int			main(int argc, char *argv[])
 {
 	int		count;
@@ -95,23 +97,28 @@ int			main(int argc, char *argv[])
 	int 	fd_6 = open(argv[6],O_RDONLY);
 	char	*line = NULL;
 
-	get_next_line(fd_4, &line);
+	// get_next_line(fd_4, &line);
+	// printf("line = %s\n", line);
+	get_next_line(fd_1, &line);
 	printf("line = %s\n", line);
 	get_next_line(fd_1, &line);
 	printf("line = %s\n", line);
-	get_next_line(fd_2, &line);
-	printf("line = %s\n", line);
 	get_next_line(fd_1, &line);
 	printf("line = %s\n", line);
-	get_next_line(fd_3, &line);
-	printf("line = %s\n", line);
-	get_next_line(fd_4, &line);
-	printf("line = %s\n", line);
-	get_next_line(fd_5, &line); // Test with not existing file
-	printf("line = %s\n", line);
-	get_next_line(fd_6, &line);
-	printf("line = %s\n", line);
-	get_next_line(fd_1, &line);
-	printf("line = %s\n", line);
+	// get_next_line(fd_2, &line);
+	// printf("line = %s\n", line);
+	// get_next_line(fd_1, &line);
+	// printf("line = %s\n", line);
+	// get_next_line(fd_3, &line);
+	// printf("line = %s\n", line);
+	// get_next_line(fd_4, &line);
+	// printf("line = %s\n", line);
+	// get_next_line(fd_5, &line); // Test with not existing file
+	// printf("line = %s\n", line);
+	// get_next_line(fd_6, &line);
+	// printf("line = %s\n", line);
+	// get_next_line(fd_1, &line);
+	// printf("line = %s\n", line);
 	return (FALSE);
 }
+*/
