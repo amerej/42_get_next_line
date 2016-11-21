@@ -6,7 +6,7 @@
 /*   By: aditsch <aditsch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/18 01:55:22 by aditsch           #+#    #+#             */
-/*   Updated: 2016/11/20 19:23:50 by aditsch          ###   ########.fr       */
+/*   Updated: 2016/11/21 11:27:32 by aditsch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ t_fd		*ft_manage_fd(t_fd **list, int fd)
 int			ft_read_tmp(char **line, t_fd *list)
 {
 	char	*tmp;
+
 	if (!list->tmp)
 		return (0);
 	if ((tmp = ft_strchr(list->tmp, '\n')))
@@ -75,7 +76,7 @@ int			get_next_line(int const fd, char **line)
 	static t_fd		*list = NULL;
 	t_fd			*current_fd;
 
-	if (!line || fd == -1)
+	if (!line || fd < 0)
 		return (-1);
 	if (*line)
 		*line = NULL;
@@ -85,6 +86,7 @@ int			get_next_line(int const fd, char **line)
 		return (1);
 	return (ft_read_fd(line, current_fd));
 }
+
 /*
 int			main(int argc, char *argv[])
 {
@@ -103,7 +105,7 @@ int			main(int argc, char *argv[])
 	printf("line = %s\n", line);
 	get_next_line(fd_1, &line);
 	printf("line = %s\n", line);
-	get_next_line(fd_1, &line);
+	get_next_line(-5, &line);
 	printf("line = %s\n", line);
 	// get_next_line(fd_2, &line);
 	// printf("line = %s\n", line);

@@ -6,7 +6,7 @@
 /*   By: aditsch <aditsch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/18 01:55:35 by aditsch           #+#    #+#             */
-/*   Updated: 2016/11/20 18:16:25 by aditsch          ###   ########.fr       */
+/*   Updated: 2016/11/21 11:59:52 by aditsch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # include <stdio.h>
 
-# define BUFF_SIZE 5
+# define BUFF_SIZE  3
 
 typedef struct			s_fd
 {
