@@ -6,121 +6,74 @@
 /*   By: aditsch <aditsch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/18 01:55:22 by aditsch           #+#    #+#             */
-/*   Updated: 2016/11/21 11:27:32 by aditsch          ###   ########.fr       */
+/*   Updated: 2017/01/16 11:34:53 by aditsch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-t_fd		*ft_manage_fd(t_fd **list, int fd)
-{
-	while (*list && (*list)->fd != fd)
-		list = &(*list)->next;
-	if (!*list)
-	{
-		*list = (t_fd *)malloc(sizeof(**list));
-		(*list)->tmp = NULL;
-		(*list)->fd = fd;
-		(*list)->next = NULL;
-	}
-	return (*list);
-}
-
-int			ft_read_tmp(char **line, t_fd *list)
+static int		ft_read_tmp(char **line, char **buff_tmp)
 {
 	char	*tmp;
+	char	*tmp_buff_tmp;
 
-	if (!list->tmp)
-		return (0);
-	if ((tmp = ft_strchr(list->tmp, '\n')))
+	if (!(*buff_tmp))
+		return (FALSE);
+	if ((tmp = ft_strchr((*buff_tmp), '\n')))
 	{
-		*line = ft_strjoin(*line, ft_strsub(list->tmp, 0, tmp - list->tmp));
-		list->tmp = ft_strdup(list->tmp + (tmp - list->tmp) + 1);
-		return (1);
+		tmp_buff_tmp = *buff_tmp;
+		*line = ft_strjoin_free(*line, ft_strsub(tmp_buff_tmp, 0,
+			tmp - tmp_buff_tmp), FREE_PTR_1 | FREE_PTR_2);
+		(*buff_tmp) = ft_strdup(tmp_buff_tmp + (tmp - tmp_buff_tmp) + 1);
+		if (tmp_buff_tmp)
+		{
+			free(tmp_buff_tmp);
+			tmp_buff_tmp = NULL;
+		}
+		return (TRUE);
 	}
 	else
-	{
-		*line = ft_strjoin(*line, list->tmp);
-		ft_strdel(&(list->tmp));
-	}
-	return (0);
+		*line = ft_strjoin_free(*line, (*buff_tmp), FREE_PTR_1 | FREE_PTR_2);
+	return (FALSE);
 }
 
-int			ft_read_fd(char **line, t_fd *list)
+static int		ft_read_fd(char **line, int fd, char **buff_tmp)
 {
 	int		count;
 	char	buffer[BUFF_SIZE + 1];
 	char	*tmp;
+	char	*tmp2;
 
-	while ((count = read(list->fd, buffer, BUFF_SIZE)))
+	while ((count = read(fd, buffer, BUFF_SIZE)))
 	{
-		if (count == -1)
-			return (-1);
+		if (count == ERROR)
+			return (ERROR);
 		buffer[count] = '\0';
 		if ((tmp = ft_strchr(buffer, '\n')))
 		{
-			*line = ft_strjoin(*line, ft_strsub(buffer, 0, tmp - buffer));
-			list->tmp = ft_strdup(buffer + (tmp - buffer) + 1);
-			return (1);
+			tmp2 = ft_strsub(buffer, 0, tmp - buffer);
+			*line = ft_strjoin_free(*line, tmp2, FREE_PTR_1 | FREE_PTR_2);
+			(*buff_tmp) = ft_strdup(buffer + (tmp - buffer) + 1);
+			return (TRUE);
 		}
 		else
-			*line = ft_strjoin(*line, buffer);
+			*line = ft_strjoin_free(*line, buffer, FREE_PTR_1);
 	}
 	if (count == 0 && **line == '\0')
-		return (0);
-	return (1);
+		return (FALSE);
+	return (TRUE);
 }
 
-int			get_next_line(int const fd, char **line)
+int				get_next_line(int const fd, char **line)
 {
-	static t_fd		*list = NULL;
-	t_fd			*current_fd;
+	static char		*buff_tmp = NULL;
 
 	if (!line || fd < 0)
-		return (-1);
-	if (*line)
+		return (ERROR);
+	if(*line)
 		*line = NULL;
 	*line = ft_strdup("");
-	current_fd = ft_manage_fd(&list, fd);
-	if (ft_read_tmp(line, current_fd))
-		return (1);
-	return (ft_read_fd(line, current_fd));
+	if (ft_read_tmp(line, &buff_tmp))
+		return (TRUE);
+	return (ft_read_fd(line, fd, &buff_tmp));
 }
-
-/*
-int			main(int argc, char *argv[])
-{
-	int		count;
-	int 	fd_1 = open(argv[1],O_RDONLY);
-	int 	fd_2 = open(argv[2],O_RDONLY);
-	int 	fd_3 = open(argv[3],O_RDONLY);
-	int 	fd_4 = open(argv[4],O_RDONLY);
-	int 	fd_5 = open(argv[5],O_RDONLY);
-	int 	fd_6 = open(argv[6],O_RDONLY);
-	char	*line = NULL;
-
-	// get_next_line(fd_4, &line);
-	// printf("line = %s\n", line);
-	get_next_line(fd_1, &line);
-	printf("line = %s\n", line);
-	get_next_line(fd_1, &line);
-	printf("line = %s\n", line);
-	get_next_line(-5, &line);
-	printf("line = %s\n", line);
-	// get_next_line(fd_2, &line);
-	// printf("line = %s\n", line);
-	// get_next_line(fd_1, &line);
-	// printf("line = %s\n", line);
-	// get_next_line(fd_3, &line);
-	// printf("line = %s\n", line);
-	// get_next_line(fd_4, &line);
-	// printf("line = %s\n", line);
-	// get_next_line(fd_5, &line); // Test with not existing file
-	// printf("line = %s\n", line);
-	// get_next_line(fd_6, &line);
-	// printf("line = %s\n", line);
-	// get_next_line(fd_1, &line);
-	// printf("line = %s\n", line);
-	return (FALSE);
-}
-*/

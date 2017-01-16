@@ -6,7 +6,7 @@
 /*   By: aditsch <aditsch@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/11 01:29:29 by aditsch           #+#    #+#             */
-/*   Updated: 2016/11/10 14:13:12 by aditsch          ###   ########.fr       */
+/*   Updated: 2017/01/16 11:37:47 by aditsch          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,16 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <fcntl.h>
 # include <string.h>
 
 # define TRUE 1
 # define FALSE 0
+# define ERROR (-1)
+
+# define NO_FREE 0x00
+# define FREE_PTR_1 0x01
+# define FREE_PTR_2 0x02
 
 typedef	struct		s_list
 {
@@ -69,6 +75,7 @@ int					ft_strequ(char const *s1, char const *s2);
 int					ft_strnequ(char const *s1, char const *s2, size_t n);
 char				*ft_strsub(char const *s, unsigned int start, size_t n);
 char				*ft_strjoin(char const *s1, char const *s2);
+char				*ft_strjoin_free(char const *s1, char const *s2, char mask);
 char				*ft_strtrim(char const *s);
 char				**ft_strsplit(char const *s, char c);
 char				*ft_itoa(int n);
